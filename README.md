@@ -4,7 +4,8 @@ This is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introdu
 
 ## Key Features
 
-- **🗄️ Database Integration**: Direct PostgreSQL database access with read and write operations
+- **🗄️ Database Integration with Lifespan**: Direct PostgreSQL database connection for all MCP tool calls
+- **🛠️ Modular, Single Purpose Tools**: Following best practices around MCP tools and their descriptions
 - **🔐 Role-Based Access**: GitHub username-based permissions for database write operations
 - **📊 Schema Discovery**: Automatic table and column information retrieval
 - **🛡️ SQL Injection Protection**: Built-in validation and sanitization
