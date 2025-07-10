@@ -175,7 +175,19 @@ Use the [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) to
 
 ## Production Deployment
 
-### For Production
+#### Set up a KV namespace
+- Create the KV namespace: 
+`wrangler kv namespace create "OAUTH_KV"`
+- Update the `wrangler.jsonc` file with the KV ID (replace <Add-KV-ID>)
+
+#### Deploy
+Deploy the MCP server to make it available on your workers.dev domain
+
+```bash
+wrangler deploy
+```
+
+### Create environment variables in production
 Create a new [GitHub OAuth App](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app): 
 - For the Homepage URL, specify `https://mcp-github-oauth.<your-subdomain>.workers.dev`
 - For the Authorization callback URL, specify `https://mcp-github-oauth.<your-subdomain>.workers.dev/callback`
@@ -188,17 +200,8 @@ wrangler secret put COOKIE_ENCRYPTION_KEY  # use: openssl rand -hex 32
 wrangler secret put DATABASE_URL
 wrangler secret put SENTRY_DSN  # optional (more on Sentry setup below)
 ```
-#### Set up a KV namespace
-- Create the KV namespace: 
-`wrangler kv namespace create "OAUTH_KV"`
-- Update the `wrangler.jsonc` file with the KV ID (replace <Add-KV-ID>)
 
-#### Deploy & Test
-Deploy the MCP server to make it available on your workers.dev domain
-
-```bash
-wrangler deploy
-```
+#### Test
 
 Test the remote server using [Inspector](https://modelcontextprotocol.io/docs/tools/inspector): 
 
