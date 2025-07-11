@@ -39,7 +39,7 @@
 		"enabled": true
 	},
 	"dev": {
-		"port": 8788
+		"port": 8792
 	}
 	/**
 	 * Smart Placement

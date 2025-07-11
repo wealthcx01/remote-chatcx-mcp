@@ -1,15 +1,15 @@
 // import { env } from "cloudflare:workers";
-import type { AuthRequest, OAuthHelpers } from "@cloudflare/workers-oauth-provider";
+import type { AuthRequest } from "@cloudflare/workers-oauth-provider";
 import { Hono } from "hono";
 import { Octokit } from "octokit";
-import { fetchUpstreamAuthToken, getUpstreamAuthorizeUrl, type Props } from "./utils";
+import type { Props, ExtendedEnv } from "../types";
 import {
 	clientIdAlreadyApproved,
 	parseRedirectApproval,
 	renderApprovalDialog,
-} from "./workers-oauth-utils";
-
-type ExtendedEnv = Env & { OAUTH_PROVIDER: OAuthHelpers };
+	fetchUpstreamAuthToken,
+	getUpstreamAuthorizeUrl,
+} from "./oauth-utils";
 const app = new Hono<{ Bindings: ExtendedEnv }>();
 
 app.get("/authorize", async (c) => {

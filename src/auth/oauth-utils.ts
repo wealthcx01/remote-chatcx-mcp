@@ -1,6 +1,13 @@
-// workers-oauth-utils.ts
+// OAuth utilities for cookie-based approval and upstream OAuth flows
 
-import type { AuthRequest, ClientInfo } from "@cloudflare/workers-oauth-provider"; // Adjust path if necessary
+import type { 
+  AuthRequest, 
+  ClientInfo,
+  ApprovalDialogOptions,
+  ParsedApprovalResult,
+  UpstreamAuthorizeParams,
+  UpstreamTokenParams 
+} from "../types";
 
 const COOKIE_NAME = "mcp-approved-clients";
 const ONE_YEAR_IN_SECONDS = 31536000;
@@ -178,54 +185,6 @@ export async function clientIdAlreadyApproved(
 	return approvedClients?.includes(clientId) ?? false;
 }
 
-/**
- * Configuration for the approval dialog
- */
-export interface ApprovalDialogOptions {
-	/**
-	 * Client information to display in the approval dialog
-	 */
-	client: ClientInfo | null;
-	/**
-	 * Server information to display in the approval dialog
-	 */
-	server: {
-		name: string;
-		logo?: string;
-		description?: string;
-	};
-	/**
-	 * Arbitrary state data to pass through the approval flow
-	 * Will be encoded in the form and returned when approval is complete
-	 */
-	state: Record<string, any>;
-	/**
-	 * Name of the cookie to use for storing approvals
-	 * @default "mcp_approved_clients"
-	 */
-	cookieName?: string;
-	/**
-	 * Secret used to sign cookies for verification
-	 * Can be a string or Uint8Array
-	 * @default Built-in Uint8Array key
-	 */
-	cookieSecret?: string | Uint8Array;
-	/**
-	 * Cookie domain
-	 * @default current domain
-	 */
-	cookieDomain?: string;
-	/**
-	 * Cookie path
-	 * @default "/"
-	 */
-	cookiePath?: string;
-	/**
-	 * Cookie max age in seconds
-	 * @default 30 days
-	 */
-	cookieMaxAge?: number;
-}
 
 /**
  * Renders an approval dialog for OAuth authorization
@@ -563,15 +522,6 @@ export function renderApprovalDialog(request: Request, options: ApprovalDialogOp
 	});
 }
 
-/**
- * Result of parsing the approval form submission.
- */
-export interface ParsedApprovalResult {
-	/** The original state object passed through the form. */
-	state: any;
-	/** Headers to set on the redirect response, including the Set-Cookie header. */
-	headers: Record<string, string>;
-}
 
 /**
  * Parses the form submission from the approval dialog, extracts the state,
@@ -649,4 +599,64 @@ function sanitizeHtml(unsafe: string): string {
 		.replace(/>/g, "&gt;")
 		.replace(/"/g, "&quot;")
 		.replace(/'/g, "&#039;");
+}
+
+// --- OAuth Helper Functions ---
+
+/**
+ * Constructs an authorization URL for an upstream service.
+ *
+ * @param {UpstreamAuthorizeParams} options - The parameters for constructing the URL
+ * @returns {string} The authorization URL.
+ */
+export function getUpstreamAuthorizeUrl({
+	upstream_url,
+	client_id,
+	scope,
+	redirect_uri,
+	state,
+}: UpstreamAuthorizeParams): string {
+	const upstream = new URL(upstream_url);
+	upstream.searchParams.set("client_id", client_id);
+	upstream.searchParams.set("redirect_uri", redirect_uri);
+	upstream.searchParams.set("scope", scope);
+	if (state) upstream.searchParams.set("state", state);
+	upstream.searchParams.set("response_type", "code");
+	return upstream.href;
+}
+
+/**
+ * Fetches an authorization token from an upstream service.
+ *
+ * @param {UpstreamTokenParams} options - The parameters for the token exchange
+ * @returns {Promise<[string, null] | [null, Response]>} A promise that resolves to an array containing the access token or an error response.
+ */
+export async function fetchUpstreamAuthToken({
+	client_id,
+	client_secret,
+	code,
+	redirect_uri,
+	upstream_url,
+}: UpstreamTokenParams): Promise<[string, null] | [null, Response]> {
+	if (!code) {
+		return [null, new Response("Missing code", { status: 400 })];
+	}
+
+	const resp = await fetch(upstream_url, {
+		body: new URLSearchParams({ client_id, client_secret, code, redirect_uri }).toString(),
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
+		},
+		method: "POST",
+	});
+	if (!resp.ok) {
+		console.log(await resp.text());
+		return [null, new Response("Failed to fetch access token", { status: 500 })];
+	}
+	const body = await resp.formData();
+	const accessToken = body.get("access_token") as string;
+	if (!accessToken) {
+		return [null, new Response("Missing access token", { status: 400 })];
+	}
+	return [accessToken, null];
 }

@@ -12,6 +12,16 @@ This is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introdu
 - **📈 Monitoring**: Optional Sentry integration for production monitoring
 - **☁️ Cloud Native**: Powered by [Cloudflare Workers](https://developers.cloudflare.com/workers/) for global scale
 
+## Modular Architecture
+
+This MCP server uses a clean, modular architecture that makes it easy to extend and maintain:
+
+- **`src/tools/`** - Individual tool implementations in separate files
+- **`registerAllTools()`** - Centralized tool registration system 
+- **Extensible Design** - Add new tools by creating files in `tools/` and registering them
+
+This architecture allows you to easily add new database operations, external API integrations, or any other MCP tools while keeping the codebase organized and maintainable.
+
 ## Transport Protocols
 
 This MCP server supports both modern and legacy transport protocols:
@@ -103,8 +113,8 @@ Before running the MCP server, you need to configure several environment variabl
    - Go to [GitHub Developer Settings](https://github.com/settings/developers)
    - Click "New OAuth App"
    - **Application name**: `MCP Server (Local Development)`
-   - **Homepage URL**: `http://localhost:8788`
-   - **Authorization callback URL**: `http://localhost:8788/callback`
+   - **Homepage URL**: `http://localhost:8792`
+   - **Authorization callback URL**: `http://localhost:8792/callback`
    - Click "Register application"
 
 2. **Copy your credentials**:
@@ -150,7 +160,7 @@ The MCP server works with any PostgreSQL database schema. It will automatically 
    ```bash
    wrangler dev
    ```
-   This makes the server available at `http://localhost:8788`
+   This makes the server available at `http://localhost:8792`
 
 ### Testing with MCP Inspector
 
@@ -162,8 +172,8 @@ Use the [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) to
    ```
 
 2. **Connect to your local server**:
-   - **Preferred**: Enter URL: `http://localhost:8788/mcp` (streamable HTTP transport - newer, more robust)
-   - **Alternative**: Enter URL: `http://localhost:8788/sse` (SSE transport - legacy support)
+   - **Preferred**: Enter URL: `http://localhost:8792/mcp` (streamable HTTP transport - newer, more robust)
+   - **Alternative**: Enter URL: `http://localhost:8792/sse` (SSE transport - legacy support)
    - Click "Connect"
    - Follow the OAuth prompts to authenticate with GitHub
    - Once connected, you'll see the available tools
@@ -404,3 +414,14 @@ The MCP Remote library enables your server to expose tools that can be invoked b
 - Provides a structured way to define tools
 - Handles serialization and deserialization of requests and responses
 - Maintains the Server-Sent Events (SSE) connection between clients and your server
+
+## Testing
+
+This project includes comprehensive unit tests covering all major functionality:
+
+```bash
+npm test        # Run all tests
+npm run test:ui # Run tests with UI
+```
+
+The test suite covers database security, tool registration, permission handling, and response formatting with proper mocking of external dependencies.
