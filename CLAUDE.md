@@ -4,7 +4,7 @@ This guide provides implementation patterns and standards for building MCP (Mode
 
 ## Core Principles
 
-**IMPORTANT: You MUST follow these principles in all code changes:**
+**IMPORTANT: You MUST follow these principles in all code changes and PRP generations:**
 
 ### KISS (Keep It Simple, Stupid)
 
