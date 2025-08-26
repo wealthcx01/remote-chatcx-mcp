@@ -2,34 +2,14 @@ import OAuthProvider from "@cloudflare/workers-oauth-provider";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { McpAgent } from "agents/mcp";
 import { GitHubHandler } from "./auth/github-handler";
-import { closeDb } from "./database/connection";
 import { registerAllTools } from "./tools/register-tools";
 import { Props } from "./types";
 
 export class MyMCP extends McpAgent<Env, Record<string, never>, Props> {
         server = new McpServer({
-                name: "PostgreSQL Database MCP Server",
+                name: "MCP Server",
                 version: "1.0.0",
         });
-
-        /**
-         * Cleanup database connections when Durable Object is shutting down
-         */
-        async cleanup(): Promise<void> {
-                try {
-                        await closeDb();
-                        console.log('Database connections closed successfully');
-                } catch (error) {
-                        console.error('Error during database cleanup:', error);
-                }
-        }
-
-        /**
-         * Durable Objects alarm handler - used for cleanup
-         */
-        async alarm(): Promise<void> {
-                await this.cleanup();
-        }
 
         async init() {
                 // Register all tools
