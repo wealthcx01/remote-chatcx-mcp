@@ -31,7 +31,7 @@ export class MyMCP extends McpAgent<Env, Record<string, never>, Props> {
 		}
 
                 // Register all tools
-                registerAllTools(this.server, this.env, this.props);
+                registerAllTools(this.server, this.env);
         }
 }
 
