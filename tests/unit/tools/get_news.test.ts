@@ -13,9 +13,9 @@ describe('get_news tool', () => {
     const tokenResponse = { CreateServiceToken_Response_1: { Token: 'test-token' } }
     const apiResponse = { headlines: [{ id: 1, text: 'News' }] }
 
-    const fetchMock = fetch as any
-    fetchMock.mockResolvedValueOnce({ json: async () => tokenResponse })
-    fetchMock.mockResolvedValueOnce({ json: async () => apiResponse })
+      const fetchMock = fetch as any
+      fetchMock.mockResolvedValueOnce({ ok: true, status: 200, json: async () => tokenResponse })
+      fetchMock.mockResolvedValueOnce({ ok: true, status: 200, json: async () => apiResponse })
 
     const result = await getNews.handler(
       { query: 'AAPL', maxCount: 10, start: '2023-01-01', end: '2023-01-31' },

@@ -13,9 +13,9 @@ describe('get_quote tool', () => {
     const tokenResponse = { CreateServiceToken_Response_1: { Token: 'test-token' } }
     const apiResponse = { data: { price: 123.45 } }
 
-    const fetchMock = fetch as any
-    fetchMock.mockResolvedValueOnce({ json: async () => tokenResponse })
-    fetchMock.mockResolvedValueOnce({ json: async () => apiResponse })
+      const fetchMock = fetch as any
+      fetchMock.mockResolvedValueOnce({ ok: true, status: 200, json: async () => tokenResponse })
+      fetchMock.mockResolvedValueOnce({ ok: true, status: 200, json: async () => apiResponse })
 
     const result = await getQuote.handler({ ric: 'AAPL.O', scope: 'All' }, env)
 

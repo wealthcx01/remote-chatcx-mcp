@@ -13,9 +13,9 @@ describe('get_chart tool', () => {
     const tokenResponse = { CreateServiceToken_Response_1: { Token: 'test-token' } }
     const apiResponse = { image: 'base64data' }
 
-    const fetchMock = fetch as any
-    fetchMock.mockResolvedValueOnce({ json: async () => tokenResponse })
-    fetchMock.mockResolvedValueOnce({ json: async () => apiResponse })
+      const fetchMock = fetch as any
+      fetchMock.mockResolvedValueOnce({ ok: true, status: 200, json: async () => tokenResponse })
+      fetchMock.mockResolvedValueOnce({ ok: true, status: 200, json: async () => apiResponse })
 
     const result = await getChart.handler(
       { ric: 'AAPL.O', chartType: 'Bar', period: '3M', width: 800, height: 600 },

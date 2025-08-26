@@ -13,9 +13,9 @@ describe('get_timeseries tool', () => {
     const tokenResponse = { CreateServiceToken_Response_1: { Token: 'test-token' } }
     const apiResponse = { prices: [1, 2, 3] }
 
-    const fetchMock = fetch as any
-    fetchMock.mockResolvedValueOnce({ json: async () => tokenResponse })
-    fetchMock.mockResolvedValueOnce({ json: async () => apiResponse })
+      const fetchMock = fetch as any
+      fetchMock.mockResolvedValueOnce({ ok: true, status: 200, json: async () => tokenResponse })
+      fetchMock.mockResolvedValueOnce({ ok: true, status: 200, json: async () => apiResponse })
 
     const result = await getTimeseries.handler(
       { ric: 'AAPL.O', start: '2023-01-01', end: '2023-01-31', interval: 'Weekly' },
