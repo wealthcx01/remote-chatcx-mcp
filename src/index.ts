@@ -13,7 +13,7 @@ export class MyMCP extends McpAgent<Env, Record<string, never>, Props> {
 
         async init() {
                 // Register all tools
-                registerAllTools(this.server, this.env, this.props);
+                registerAllTools(this.server, this.env);
         }
 }
 
