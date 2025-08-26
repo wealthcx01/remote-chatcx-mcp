@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import getQuote from '../../../src/tools/get_quote'
+import { createSuccessResponse } from '../../../src/types'
 
 const env = {
   RKD_BASE_URL: 'https://rkd.example.com',
@@ -41,7 +42,9 @@ describe('get_quote tool', () => {
       },
     })
 
-    expect(result).toEqual(apiResponse)
+    expect(result).toEqual(
+      createSuccessResponse('Retrieved quote', apiResponse)
+    )
   })
 })
 

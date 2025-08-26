@@ -1,4 +1,5 @@
-import { callRkdService } from "../rkdClient";
+import { callRkdService, type Env } from "../rkdClient";
+import { createSuccessResponse, createErrorResponse } from "../types";
 export default {
   name: "get_chart",
   description: "Get a chart image for a security",
@@ -13,7 +14,7 @@ export default {
     },
     required: ["ric"],
   },
-  handler: async (input, env) => {
+  handler: async (input: any, env: Env) => {
     const body = {
       GetChart_Request_2: {
         Symbol: input.ric,
@@ -23,10 +24,19 @@ export default {
         Height: input.height || 400,
       },
     };
-    return callRkdService(
-      env,
-      "/Charts/Charts.svc/REST/Charts_1/GetChart_2",
-      body
-    );
+
+    try {
+      const data = await callRkdService(
+        env,
+        "/Charts/Charts.svc/REST/Charts_1/GetChart_2",
+        body
+      );
+      return createSuccessResponse("Retrieved chart data", data);
+    } catch (error) {
+      return createErrorResponse(
+        "Failed to retrieve chart data",
+        error instanceof Error ? { message: error.message } : error
+      );
+    }
   },
 };
