@@ -4,21 +4,13 @@
 declare namespace Cloudflare {
 	interface Env {
 		OAUTH_KV: KVNamespace;
-               GITHUB_CLIENT_ID: string;
-               GITHUB_CLIENT_SECRET: string;
-               COOKIE_ENCRYPTION_KEY: string;
-               DATABASE_URL: string;
-               PERPLEXITY_API_KEY: string;
-               ANTHROPIC_API_KEY: string;
-               SENTRY_DSN: string;
-               NODE_ENV: string;
-               RKD_BASE_URL: string;
-               RKD_APP_ID: string;
-               RKD_USERNAME: string;
-               RKD_PASSWORD: string;
-               MCP_OBJECT: DurableObjectNamespace<import("./src/index").MyMCP>;
-               AI: Ai;
-       }
+		RKD_BASE_URL: "";
+		RKD_APP_ID: "";
+		RKD_USERNAME: "";
+		RKD_PASSWORD: "";
+		MCP_OBJECT: DurableObjectNamespace<import("./src/index").MyMCP>;
+		AI: Ai;
+	}
 }
 interface Env extends Cloudflare.Env {}
 
