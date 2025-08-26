@@ -1,4 +1,5 @@
-import { callRkdService } from "../rkdClient";
+import { callRkdService, type Env } from "../rkdClient";
+import { createSuccessResponse, createErrorResponse } from "../types";
 export default {
   name: "get_timeseries",
   description: "Get historical price data",
@@ -12,7 +13,7 @@ export default {
     },
     required: ["ric","start","end"],
   },
-  handler: async (input, env) => {
+  handler: async (input: any, env: Env) => {
     const body = {
       GetInterdayTimeSeries_Request_5: {
         Symbol: input.ric,
@@ -21,10 +22,19 @@ export default {
         Interval: input.interval || "Daily",
       },
     };
-    return callRkdService(
-      env,
-      "/TimeSeries/TimeSeries.svc/REST/TimeSeries_1/GetInterdayTimeSeries_5",
-      body
-    );
+
+    try {
+      const data = await callRkdService(
+        env,
+        "/TimeSeries/TimeSeries.svc/REST/TimeSeries_1/GetInterdayTimeSeries_5",
+        body
+      );
+      return createSuccessResponse("Retrieved time series data", data);
+    } catch (error) {
+      return createErrorResponse(
+        "Failed to retrieve time series data",
+        error instanceof Error ? { message: error.message } : error
+      );
+    }
   },
 };

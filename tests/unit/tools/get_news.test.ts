@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import getNews from '../../../src/tools/get_news'
+import { createSuccessResponse } from '../../../src/types'
 
 const env = {
   RKD_BASE_URL: 'https://rkd.example.com',
@@ -40,7 +41,9 @@ describe('get_news tool', () => {
       },
     })
 
-    expect(result).toEqual(apiResponse)
+    expect(result).toEqual(
+      createSuccessResponse('Retrieved news headlines', apiResponse)
+    )
   })
 })
 

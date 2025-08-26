@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import getTimeseries from '../../../src/tools/get_timeseries'
+import { createSuccessResponse } from '../../../src/types'
 
 const env = {
   RKD_BASE_URL: 'https://rkd.example.com',
@@ -41,7 +42,9 @@ describe('get_timeseries tool', () => {
       },
     })
 
-    expect(result).toEqual(apiResponse)
+    expect(result).toEqual(
+      createSuccessResponse('Retrieved time series data', apiResponse)
+    )
   })
 })
 

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import getChart from '../../../src/tools/get_chart'
+import { createSuccessResponse } from '../../../src/types'
 
 const env = {
   RKD_BASE_URL: 'https://rkd.example.com',
@@ -42,7 +43,9 @@ describe('get_chart tool', () => {
       },
     })
 
-    expect(result).toEqual(apiResponse)
+    expect(result).toEqual(
+      createSuccessResponse('Retrieved chart data', apiResponse)
+    )
   })
 })
 
