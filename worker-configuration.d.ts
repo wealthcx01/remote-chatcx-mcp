@@ -12,7 +12,7 @@ declare namespace Cloudflare {
 		ANTHROPIC_API_KEY: string;
 		SENTRY_DSN: string;
 		NODE_ENV: string;
-		MCP_OBJECT: DurableObjectNamespace<import("./src/index").MyMCP>;
+                MCP_OBJECT: DurableObjectNamespace<import("./src/index_sentry").MyMCP>;
 		AI: Ai;
 	}
 }
