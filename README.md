@@ -46,10 +46,6 @@ The MCP server provides three main tools for database interaction:
 - Only specific GitHub usernames can write/modify data
 - SQL injection protection and query validation built-in
 
-## Simple Example First
-
-Want to see a basic MCP server before diving into the full database implementation? Check out `src/simple-math.ts` - a minimal MCP server with a single `calculate` tool that performs basic math operations (add, subtract, multiply, divide). This example demonstrates the core MCP components: server setup, tool definition with Zod schemas, and dual transport support (`/mcp` and `/sse` endpoints). You can run it locally with `wrangler dev --config wrangler-simple.jsonc` and test at `http://localhost:8789/mcp`.
-
 ## Prerequisites
 
 - Node.js installed on your machine
