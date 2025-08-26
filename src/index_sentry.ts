@@ -4,8 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { McpAgent } from "agents/mcp";
 import { Props } from "./types";
 import { GitHubHandler } from "./auth/github-handler";
-import { closeDb } from "./database/connection";
-import { registerDatabaseToolsWithSentry } from "./tools/database-tools-sentry";
+import { registerAllTools } from "./tools/register-tools";
 
 // Sentry configuration helper
 function getSentryConfig(env: Env) {
@@ -18,29 +17,10 @@ function getSentryConfig(env: Env) {
 }
 
 export class MyMCP extends McpAgent<Env, Record<string, never>, Props> {
-	server = new McpServer({
-		name: "PostgreSQL Database MCP Server",
-		version: "1.0.0",
-	});
-
-	/**
-	 * Cleanup database connections when Durable Object is shutting down
-	 */
-	async cleanup(): Promise<void> {
-		try {
-			await closeDb();
-			console.log('Database connections closed successfully');
-		} catch (error) {
-			console.error('Error during database cleanup:', error);
-		}
-	}
-
-	/**
-	 * Durable Objects alarm handler - used for cleanup
-	 */
-	async alarm(): Promise<void> {
-		await this.cleanup();
-	}
+        server = new McpServer({
+                name: "MCP Server",
+                version: "1.0.0",
+        });
 
 	async init() {
 		// Initialize Sentry
@@ -50,9 +30,9 @@ export class MyMCP extends McpAgent<Env, Record<string, never>, Props> {
 			Sentry.init(sentryConfig);
 		}
 
-		// Register all tools with Sentry instrumentation
-		registerDatabaseToolsWithSentry(this.server, this.env, this.props);
-	}
+                // Register all tools
+                registerAllTools(this.server, this.env, this.props);
+        }
 }
 
 export default new OAuthProvider({
