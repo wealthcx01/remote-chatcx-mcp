@@ -97,8 +97,6 @@ Build a production-ready MCP (Model Context Protocol) server with:
 - file: src/database.ts
   why: Database security, connection pooling, SQL validation - FOLLOW these patterns
 
-- file: src/simple-math.ts
-  why: Basic MCP server without auth - good starting point for tool registration
 
 - file: wrangler.jsonc
   why: Cloudflare Workers configuration - COPY this pattern for deployment
@@ -121,7 +119,6 @@ Build a production-ready MCP (Model Context Protocol) server with:
 ├── src/
 │   ├── index.ts                 # Main authenticated MCP server ← STUDY THIS
 │   ├── index_sentry.ts         # Sentry monitoring version
-│   ├── simple-math.ts          # Basic MCP example ← GOOD STARTING POINT
 │   ├── github-handler.ts       # OAuth implementation ← USE THIS PATTERN
 │   ├── database.ts             # Database utilities ← SECURITY PATTERNS
 │   ├── utils.ts                # OAuth helpers
@@ -288,8 +285,8 @@ Task 6 - Local Testing:
   TEST basic functionality:
     - RUN: wrangler dev
     - VERIFY server starts without errors
-    - TEST OAuth flow: http://localhost:8788/authorize
-    - VERIFY MCP endpoint: http://localhost:8788/mcp
+    - TEST OAuth flow: http://localhost:8792/authorize
+    - VERIFY MCP endpoint: http://localhost:8792/mcp
 
 Task 7 - Production Deployment:
   DEPLOY to Cloudflare Workers:
@@ -443,10 +440,10 @@ wrangler types                     # Generate Cloudflare Workers types
 wrangler dev
 
 # Test OAuth flow (should redirect to GitHub)
-curl -v http://localhost:8788/authorize
+curl -v http://localhost:8792/authorize
 
 # Test MCP endpoint (should return server info)
-curl -v http://localhost:8788/mcp
+curl -v http://localhost:8792/mcp
 
 # Expected: Server starts, OAuth redirects to GitHub, MCP responds with server info
 # If errors: Check console output, verify environment variables, fix configuration
@@ -456,7 +453,7 @@ curl -v http://localhost:8788/mcp
 
 ```bash
 # Test database connection
-curl -X POST http://localhost:8788/mcp \
+curl -X POST http://localhost:8792/mcp \
   -H "Content-Type: application/json" \
   -d '{"method": "tools/call", "params": {"name": "listTables", "arguments": {}}}'
 
@@ -474,7 +471,7 @@ curl -X POST http://localhost:8788/mcp \
 
 - [ ] TypeScript compilation: `npm run type-check` passes
 - [ ] Local server starts: `wrangler dev` runs without errors
-- [ ] MCP endpoint responds: `curl http://localhost:8788/mcp` returns server info
+- [ ] MCP endpoint responds: `curl http://localhost:8792/mcp` returns server info
 - [ ] OAuth flow works: Authentication redirects and completes successfully
 
 ---

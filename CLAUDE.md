@@ -82,7 +82,6 @@ wrangler types         # Generate TypeScript types from Worker configuration
 ├── src/                          # TypeScript source code
 │   ├── index.ts                  # Main MCP server (standard)
 │   ├── index_sentry.ts          # Sentry-enabled MCP server
-│   ├── simple-math.ts           # Basic MCP example (no auth)
 │   ├── github-handler.ts        # GitHub OAuth flow implementation
 │   ├── database.ts              # PostgreSQL connection & utilities
 │   ├── utils.ts                 # OAuth helper functions
@@ -92,7 +91,6 @@ wrangler types         # Generate TypeScript types from Worker configuration
 │   └── templates/
 │       └── prp_base.md
 ├── wrangler.jsonc              # Main Cloudflare Workers configuration
-├── wrangler-simple.jsonc       # Simple math example configuration
 ├── package.json                # npm dependencies & scripts
 ├── tsconfig.json               # TypeScript configuration
 ├── worker-configuration.d.ts   # Generated Cloudflare types
@@ -105,7 +103,6 @@ wrangler types         # Generate TypeScript types from Worker configuration
 
 - `src/index.ts` - Production MCP server with GitHub OAuth + PostgreSQL
 - `src/index_sentry.ts` - Same as above with Sentry monitoring integration
-- `src/simple-math.ts` - Basic MCP server example (calculator without auth)
 
 **Authentication & Security:**
 
@@ -120,7 +117,6 @@ wrangler types         # Generate TypeScript types from Worker configuration
 **Configuration Files:**
 
 - `wrangler.jsonc` - Main Worker config with Durable Objects, KV, AI bindings
-- `wrangler-simple.jsonc` - Simple example configuration
 - `tsconfig.json` - TypeScript compiler settings for Cloudflare Workers
 
 ## Development Commands
@@ -211,11 +207,6 @@ export class MyMCP extends McpAgent<Env, Record<string, never>, Props> {
 - Error tracking with event IDs
 - Performance monitoring
 
-**3. Simple MCP Server (`src/simple-math.ts`):**
-
-- Basic calculator example without authentication
-- Demonstrates core MCP patterns
-- Useful for learning and testing
 
 ### MCP Development Commands
 
@@ -223,10 +214,8 @@ export class MyMCP extends McpAgent<Env, Record<string, never>, Props> {
 
 ```bash
 # Start main MCP server (with OAuth)
-wrangler dev                    # Available at http://localhost:8788/mcp
+wrangler dev                    # Available at http://localhost:8792/mcp
 
-# Start simple MCP server (no auth)
-wrangler dev --config wrangler-simple.jsonc  # Port 8789
 ```
 
 ### Claude Desktop Integration
@@ -238,7 +227,7 @@ wrangler dev --config wrangler-simple.jsonc  # Port 8789
   "mcpServers": {
     "database-mcp": {
       "command": "npx",
-      "args": ["mcp-remote", "http://localhost:8788/mcp"],
+      "args": ["mcp-remote", "http://localhost:8792/mcp"],
       "env": {}
     }
   }
